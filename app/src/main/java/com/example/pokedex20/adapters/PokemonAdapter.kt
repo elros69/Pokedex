@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -25,6 +26,7 @@ class PokemonAdapter(private val listaPokemon: List<Pokemon>): Adapter<PokemonAd
         internal val pokemonNombreTextCardView: TextView = view.findViewById(R.id.pokemonNombreTextCardView)
         internal val pokemonTiposTextCardView: TextView = view.findViewById(R.id.pokemonTiposTextCardView)
         internal val pokemonCardImageView: ImageView = view.findViewById(R.id.pokemonCardImageView)
+        internal val pokemonLayoutCardView: CardView = view.findViewById(R.id.pokemonLayoutCardView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
@@ -49,6 +51,10 @@ class PokemonAdapter(private val listaPokemon: List<Pokemon>): Adapter<PokemonAd
                 holder.pokemonTiposTextCardView.text = (listaPokemon[position].types[0].type!!.name)!!.capitalize()
         } else {
             holder.pokemonTiposTextCardView.text = ((listaPokemon[position].types[0].type!!.name)!!.capitalize() + " | " + (listaPokemon[position].types[1].type?.name!!.capitalize() ?: "nulo"))
+        }
+
+        holder.pokemonLayoutCardView.setOnClickListener {
+            this.click?.let { it1 -> it1(position, listaPokemon[position]) }
         }
 
 

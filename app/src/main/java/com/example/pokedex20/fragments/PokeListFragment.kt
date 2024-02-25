@@ -117,7 +117,14 @@ class PokeListFragment : Fragment() {
             PokemonViewModel.selected = pokemon
             val fm: FragmentManager = parentFragmentManager
             fm.commit {
+                setCustomAnimations(
+                    R.anim.slide_in_from_right,  // Animación de entrada
+                    R.anim.slide_out_to_left,     // Animación de salida
+                    R.anim.slide_in_from_left,    // Animación de entrada para el nuevo fragmento
+                    R.anim.slide_out_to_right     // Animación de salida para el fragmento actual
+                )
                 replace(R.id.fragmentContainerView, PokeDetailFragment.newInstance())
+                addToBackStack("replacement")
             }
         }
         // Esto de aqui
