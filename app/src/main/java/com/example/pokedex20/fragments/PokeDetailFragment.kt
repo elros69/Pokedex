@@ -32,7 +32,7 @@ class PokeDetailFragment : Fragment() {
     fun update() {
         pokemonSelected = PokemonViewModel.selected
         val imageView = v.findViewById<ImageView>(R.id.detailImageView)
-        v.findViewById<TextView>(R.id.detailNameTextView).text = pokemonSelected!!.name
+        v.findViewById<TextView>(R.id.detailNameTextView).text = pokemonSelected!!.name!!.toUpperCase()
         Glide.with(v)
             .load(pokemonSelected!!.sprites!!.frontDefault)
             .transition(DrawableTransitionOptions.withCrossFade())
@@ -49,7 +49,7 @@ class PokeDetailFragment : Fragment() {
             override fun onResponse(call: Call<PokedexEntry>, response: Response<PokedexEntry>) {
                 if (response.isSuccessful) {
                     val entradaDex: PokedexEntry? = response.body()
-                    v.findViewById<TextView>(R.id.detailDescriptionPokemon).text = entradaDex!!.flavorTextEntries.get(1).flavorText!!
+                    v.findViewById<TextView>(R.id.detailDescriptionPokemon).text = entradaDex!!.flavorTextEntries.get(0).flavorText!!
                     //Log.d("Pokedex", "Ha sacado la entrada del pokemon")
                     //Log.d("Pokedex", entradaDex!!.flavorTextEntries.get(1).flavorText!!)
 

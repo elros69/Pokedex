@@ -42,7 +42,58 @@ class PokeListFragment : Fragment() {
         val pokemonRecyclerView: RecyclerView = v.findViewById(R.id.pokemonRecyclerView)
         var adaptador: PokemonAdapter
 
-        /*val pokemonRepository = PokemonRepository { listaProvisional ->
+
+
+        adaptador = PokemonAdapter(PokemonViewModel.listaPokemonOrdenadaId)
+        adaptador.click = { position, pokemon ->
+            PokemonViewModel.selected = pokemon
+            val fm: FragmentManager = parentFragmentManager
+            fm.commit {
+                setCustomAnimations(
+                    R.anim.slide_in_from_right,  // Animación de entrada
+                    R.anim.slide_out_to_left,     // Animación de salida
+                    R.anim.slide_in_from_left,    // Animación de entrada para el nuevo fragmento
+                    R.anim.slide_out_to_right     // Animación de salida para el fragmento actual
+                )
+                replace(R.id.fragmentContainerView, PokeDetailFragment.newInstance())
+                addToBackStack("replacement")
+            }
+        }
+        // Esto de aqui
+        val layoutManager = GridLayoutManager(this.context, 1)
+        pokemonRecyclerView.layoutManager = layoutManager
+        pokemonRecyclerView.adapter = adaptador
+
+        return v
+
+    }
+
+
+    fun showFragmentWithPokemonList() {
+        val fragmentManager = parentFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val fragment = PokeListFragment()
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+
+
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance() =
+            PokeListFragment().apply {
+                arguments = Bundle().apply {
+
+                }
+            }
+    }
+
+
+
+    /*val pokemonRepository = PokemonRepository { listaProvisional ->
             if (listaProvisional != null && listaProvisional.results.isNotEmpty()) {
 
                 // Si no esta vacia obtenemos cada Pokemon
@@ -88,71 +139,29 @@ class PokeListFragment : Fragment() {
         }*/
 
 
-        /*val pokemonRepositorymalo = PokemonRepository { listaPokemon ->
-            Log.d("ORDEN_LISTA", listaPokemon.toString())
-            adaptador = PokemonAdapter(listaPokemon)
-            // Esto de aqui
-            val layoutManager = GridLayoutManager(this.context, 1)
-            pokemonRecyclerView.layoutManager = layoutManager
-            pokemonRecyclerView.adapter = adaptador
-
-
-            // Hasta aqui puede dar problemas
-            /*adaptador.click = { position, pokemon ->
-                run {
-                    PokemonViewModel.selected = pokemon
-                    val fm: FragmentManager = parentFragmentManager
-                    // Aqui haria el cambio a horizontal o vertical
-                }
-
-            }*/
-
-            //showFragmentWithPokemonList()
-
-¡
-        }*/
-
-        adaptador = PokemonAdapter(PokemonViewModel.listaPokemonOrdenadaId)
-        adaptador.click = { position, pokemon ->
-            PokemonViewModel.selected = pokemon
-            val fm: FragmentManager = parentFragmentManager
-            fm.commit {
-                setCustomAnimations(
-                    R.anim.slide_in_from_right,  // Animación de entrada
-                    R.anim.slide_out_to_left,     // Animación de salida
-                    R.anim.slide_in_from_left,    // Animación de entrada para el nuevo fragmento
-                    R.anim.slide_out_to_right     // Animación de salida para el fragmento actual
-                )
-                replace(R.id.fragmentContainerView, PokeDetailFragment.newInstance())
-                addToBackStack("replacement")
-            }
-        }
+    /*val pokemonRepositorymalo = PokemonRepository { listaPokemon ->
+        Log.d("ORDEN_LISTA", listaPokemon.toString())
+        adaptador = PokemonAdapter(listaPokemon)
         // Esto de aqui
         val layoutManager = GridLayoutManager(this.context, 1)
         pokemonRecyclerView.layoutManager = layoutManager
         pokemonRecyclerView.adapter = adaptador
 
-        return v
 
-    }
-
-    fun showFragmentWithPokemonList() {
-        val fragmentManager = parentFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = PokeListFragment()
-        fragmentTransaction.replace(R.id.fragmentContainerView, fragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() =
-            PokeListFragment().apply {
-                arguments = Bundle().apply {
-
-                }
+        // Hasta aqui puede dar problemas
+        /*adaptador.click = { position, pokemon ->
+            run {
+                PokemonViewModel.selected = pokemon
+                val fm: FragmentManager = parentFragmentManager
+                // Aqui haria el cambio a horizontal o vertical
             }
-    }
+
+        }*/
+
+        //showFragmentWithPokemonList()
+
+¡
+    }*/
+
+
 }

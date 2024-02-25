@@ -91,6 +91,7 @@ class ProgressBarActivity : AppCompatActivity() {
                 }
             }
             PokemonViewModel.ordenarPokemonsPorIdDeMenorAMayor()
+            PokemonViewModel.ordenarPokemonPorNombre()
             //isListLoaded = true
 
             // Cargar GIF

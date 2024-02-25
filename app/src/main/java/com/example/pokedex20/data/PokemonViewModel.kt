@@ -48,6 +48,7 @@ class PokemonViewModel(): ViewModel() {
 
         var listaPokemons: MutableList<Pokemon> = mutableListOf()
         var listaPokemonOrdenadaId: MutableList<Pokemon> = mutableListOf()
+        var listaPokemonOrdenadaNombre: MutableList<Pokemon> = mutableListOf()
 
         var loggedInUserInternal: Usuario? = null
             get() = loggedInUserLiveData.value
@@ -61,9 +62,11 @@ class PokemonViewModel(): ViewModel() {
             return loggedInUserInternal
         }
 
-        fun ordenarPokemonsPorIdDeMenorAMayor(): MutableList<Pokemon> {
+        fun ordenarPokemonsPorIdDeMenorAMayor() {
             listaPokemonOrdenadaId = listaPokemons.sortedBy { it.id ?: 0 }.toMutableList()
-            return listaPokemonOrdenadaId
+        }
+        fun ordenarPokemonPorNombre() {
+            listaPokemonOrdenadaNombre = listaPokemons.sortedBy { it.name.orEmpty() }.toMutableList()
         }
 
     }

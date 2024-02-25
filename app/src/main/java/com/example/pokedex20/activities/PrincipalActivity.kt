@@ -26,11 +26,17 @@ import kotlinx.coroutines.launch
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.widget.SearchView
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.FragmentContainer
+import androidx.fragment.app.FragmentContainerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.pokedex20.fragments.PokeListAlfabeticaFragment
+import com.example.pokedex20.fragments.PokeListFragment
 import java.io.InputStream
 import kotlin.math.log
 
@@ -42,10 +48,16 @@ class PrincipalActivity : AppCompatActivity() {
     private lateinit var userLoggedTextField: TextView
     private lateinit var imageButtonNav: Button
     private lateinit var imageView: ImageView
+    private lateinit var mostrarFragmentoListaAlfabetica: CardView
+    private lateinit var mostrarFragmentoListaNumerica: CardView
+
+
+    private lateinit var searchPokemonView: SearchView
 
     private lateinit var viewModel: PokemonViewModel
 
     private lateinit var dataBase: UserDataBase
+    private lateinit var fragmentContainerView: FragmentContainerView
 
     /*companion object {
         private const val REQUEST_CODE_PERMISSION = 123
@@ -66,12 +78,81 @@ class PrincipalActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.principalDrawerLayout)
         navigationView = findViewById(R.id.navigationView)
         toolBar = findViewById(R.id.principalToolBar)
+        searchPokemonView = findViewById(R.id.searchViewPokemon)
+
+        /*searchPokemonView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adaptador.filter.filter(newText)
+                return true
+            }
+        })*/
 
         val headerView = navigationView.getHeaderView(0)
 
         userLoggedTextField = headerView.findViewById(R.id.userLoggedTextField)
-        imageButtonNav = headerView.findViewById(R.id.imageButonNav)
         imageView = headerView.findViewById(R.id.imageView)
+        mostrarFragmentoListaAlfabetica = headerView.findViewById(R.id.mostrarFragmentoListaAlfabetica)
+        mostrarFragmentoListaNumerica = headerView.findViewById(R.id.mostrarFragmentoListaNumerica)
+
+        mostrarFragmentoListaAlfabetica.setOnClickListener {
+            // Obtén el FragmentManager
+            val fragmentManager = supportFragmentManager
+
+            // Comienza una transacción para realizar cambios en los fragmentos
+            val fragmentTransaction = fragmentManager.beginTransaction()
+
+            // Reemplaza el fragmento actual con el nuevo fragmento
+            fragmentTransaction.replace(
+                R.id.fragmentContainerView,  // Reemplaza con el ID de tu FragmentContainerView
+                PokeListAlfabeticaFragment.newInstance()
+            )
+
+            fragmentTransaction.setCustomAnimations(
+                R.anim.slide_in_from_right,  // Animación de entrada
+                R.anim.slide_out_to_left,     // Animación de salida
+                R.anim.slide_in_from_left,    // Animación de entrada para el nuevo fragmento
+                R.anim.slide_out_to_right     // Animación de salida para el fragmento actual
+            )
+
+            // Añade la transacción al back stack (opcional, pero útil para navegación hacia atrás)
+            fragmentTransaction.addToBackStack(null)
+
+            // Completa la transacción
+            fragmentTransaction.commit()
+        }
+
+        mostrarFragmentoListaNumerica.setOnClickListener {
+            // Obtén el FragmentManager
+            val fragmentManager = supportFragmentManager
+
+            // Comienza una transacción para realizar cambios en los fragmentos
+            val fragmentTransaction = fragmentManager.beginTransaction()
+
+            // Reemplaza el fragmento actual con el nuevo fragmento
+            fragmentTransaction.replace(
+                R.id.fragmentContainerView,  // Reemplaza con el ID de tu FragmentContainerView
+                PokeListFragment.newInstance()
+            )
+
+            fragmentTransaction.setCustomAnimations(
+                R.anim.slide_in_from_right,  // Animación de entrada
+                R.anim.slide_out_to_left,     // Animación de salida
+                R.anim.slide_in_from_left,    // Animación de entrada para el nuevo fragmento
+                R.anim.slide_out_to_right     // Animación de salida para el fragmento actual
+            )
+
+            // Añade la transacción al back stack (opcional, pero útil para navegación hacia atrás)
+            fragmentTransaction.addToBackStack(null)
+
+            // Completa la transacción
+            fragmentTransaction.commit()
+        }
+
+
 
         userLoggedTextField.text = PokemonViewModel.getLoggedInUser()?.nombre
 
@@ -80,6 +161,9 @@ class PrincipalActivity : AppCompatActivity() {
             .load(R.raw.pokeball_spin_gif)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
+
+
+
 
         // Configuramos el toolbar
         setSupportActionBar(toolBar)
