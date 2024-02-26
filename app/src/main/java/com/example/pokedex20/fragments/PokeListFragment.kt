@@ -1,11 +1,14 @@
 package com.example.pokedex20.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.fragment.app.FragmentContainerView
 import retrofit2.Callback
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
@@ -13,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex20.R
+import com.example.pokedex20.activities.PrincipalActivity
 import com.example.pokedex20.adapters.PokemonAdapter
 import com.example.pokedex20.api.PokeAPIClient
 import com.example.pokedex20.data.PokemonRepository
@@ -26,6 +30,8 @@ import retrofit2.Response
 class PokeListFragment : Fragment() {
 
     private lateinit var v: View
+    private lateinit var adaptador: PokemonAdapter
+    private lateinit var pokemonRecyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +45,8 @@ class PokeListFragment : Fragment() {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_poke_list, container, false)
 
-        val pokemonRecyclerView: RecyclerView = v.findViewById(R.id.pokemonRecyclerView)
-        var adaptador: PokemonAdapter
+         pokemonRecyclerView = v.findViewById(R.id.pokemonRecyclerView)
+
 
 
 
@@ -68,14 +74,54 @@ class PokeListFragment : Fragment() {
 
     }
 
+    /*override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val principalActivity = context as PrincipalActivity
+        principalActivity.findViewById<SearchView>(R.id.searchViewPokemon).setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
 
-    fun showFragmentWithPokemonList() {
-        val fragmentManager = parentFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = PokeListFragment()
-        fragmentTransaction.replace(R.id.fragmentContainerView, fragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adaptador.filter.filter(newText)
+                return true
+            }
+        })
+
+    }*/
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val principalActivity = activity as? PrincipalActivity
+
+        // Verifica que la actividad sea de tipo PrincipalActivity y que el adaptador esté inicializado
+        if (principalActivity != null && ::adaptador.isInitialized) {
+            // Obtén el SearchView de la actividad y configura el OnQueryTextListener
+
+            principalActivity.findViewById<SearchView>(R.id.searchViewPokemon).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (query != null) {
+                        adaptador = PokemonAdapter(PokemonViewModel.filtrarPokemonsPorNombre(query))
+                        pokemonRecyclerView.adapter = adaptador
+                    }
+                    Log.d("Hola", "Si le doy a submit hace esto")
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    // Filtrar el adaptador según el nuevo texto
+                    if (newText != null) {
+                        adaptador = PokemonAdapter(PokemonViewModel.filtrarPokemonsPorNombre(newText))
+                        pokemonRecyclerView.adapter = adaptador
+                    }
+                    Log.d("Hola", "Tecla")
+                    return true
+                }
+            })
+        }
     }
 
 

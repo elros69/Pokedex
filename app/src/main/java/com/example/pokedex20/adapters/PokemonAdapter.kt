@@ -3,6 +3,8 @@ package com.example.pokedex20.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -18,6 +20,7 @@ import com.example.pokedex20.model.Pokemon
 class PokemonAdapter(private val listaPokemon: List<Pokemon>): Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     var click: ((Int, Pokemon) -> Unit)? = null
+    var filteredList: List<Pokemon> = listaPokemon
 
     inner class PokemonViewHolder(internal val view: View): ViewHolder(view) {
         // Pones los objetos de la vista: Texfields y todas esas movidas.
@@ -59,5 +62,28 @@ class PokemonAdapter(private val listaPokemon: List<Pokemon>): Adapter<PokemonAd
 
 
     }
+
+    /*override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(charSequence: CharSequence?): FilterResults {
+                val query = charSequence?.toString()?.toLowerCase()
+                val results = FilterResults()
+                if (query.isNullOrBlank()) {
+                    results.values = listaPokemon
+                } else {
+                    val filtered = listaPokemon.filter { pokemon ->
+                        pokemon.name?.toLowerCase()?.contains(query) == true
+                    }
+                    results.values = filtered
+                }
+                return results
+            }
+
+            override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults?) {
+                filteredList = filterResults?.values as? List<Pokemon> ?: emptyList()
+                notifyDataSetChanged()
+            }
+        }
+    }*/
 
 }
